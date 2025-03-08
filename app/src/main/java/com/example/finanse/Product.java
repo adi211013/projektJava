@@ -1,3 +1,5 @@
+package com.example.finanse;
+
 public class Product {
     private int Id;
     private String Name,Category;

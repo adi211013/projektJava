@@ -3,7 +3,7 @@
     <string name="add">Dodaj zakup</string>
     <string name="chart">Zobacz wykres</string>
     <string name="history">Zobacz historie zakupów</string>
-    <string name="back">Wróćś</string>
+    <string name="back">Wróć</string>
     <string-array name="categoriesEntries">
         <item>Usługi</item>
         <item>Paliwo</item>

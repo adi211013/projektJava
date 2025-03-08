@@ -1,3 +1,5 @@
+package com.example.finanse;
+
 import java.util.List;
 
 public interface ProductLogic  {
