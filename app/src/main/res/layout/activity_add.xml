@@ -7,9 +7,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".addActivity">
+    <EditText
+        android:id="@+id/nameEditext"
+        android:inputType="text"
+        android:hint="@string/nameHint"
+        android:layout_width="200dp"
+        android:layout_height="50dp"/>
+    <EditText
+        android:id="@+id/priceEditext"
+        android:inputType="numberDecimal"
+        android:hint="@string/priceHint"
+        android:layout_width="200dp"
+        android:layout_height="50dp"/>
+    <EditText
+        android:id="@+id/amountEditext"
+        android:inputType="number"
+        android:hint="@string/amountHint"
+        android:layout_width="200dp"
+        android:layout_height="50dp"/>
+    <Spinner
+        android:id="@+id/categoriesSpinner"
+        android:entries="@array/categoriesEntries"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
     <Button
-        android:id="@+id/backButton"
-        android:text="@string/back"
+        android:id="@+id/addProductButton"
+        android:text="@string/addProduct"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+    <Button
+    android:id="@+id/backButton"
+    android:text="@string/back"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"/>
 </LinearLayout>

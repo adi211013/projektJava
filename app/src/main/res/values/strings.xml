@@ -4,4 +4,15 @@
     <string name="chart">Zobacz wykres</string>
     <string name="history">Zobacz historie zakupów</string>
     <string name="back">Wróćś</string>
+    <string-array name="categoriesEntries">
+        <item>Usługi</item>
+        <item>Paliwo</item>
+        <item>Elektronika</item>
+        <item>Żywność</item>
+        <item>Opłaty</item>
+    </string-array>
+    <string name="addProduct">Dodaj produkt</string>
+    <string name="nameHint">Podaj nazwe produktu</string>
+    <string name="priceHint">Podaj cene</string>
+    <string name="amountHint">Podaj ilość</string>
 </resources>
