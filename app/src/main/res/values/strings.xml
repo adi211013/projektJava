@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">finanse</string>
+    <string name="add">Dodaj zakup</string>
+    <string name="chart">Zobacz wykres</string>
+    <string name="history">Zobacz historie zakupów</string>
+    <string name="back">Wróćś</string>
 </resources>
