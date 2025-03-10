@@ -4,13 +4,52 @@
     android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:layout_marginTop="30dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".historyActivity">
-    <androidx.recyclerview.widget.RecyclerView
+    <TableLayout
+        android:id="@+id/table"
         android:layout_width="match_parent"
         android:layout_height="600dp"
-        android:id="@+id/historyView"/>
+        android:padding="5dp"
+
+        >
+        <TableRow>
+            <TextView
+                android:text="@string/name"
+                android:paddingTop="5dp"
+                android:paddingLeft="20dp"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:text="@string/category"
+                android:paddingTop="5dp"
+                android:paddingLeft="20dp"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:text="@string/price"
+                android:paddingTop="5dp"
+                android:paddingLeft="20dp"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:text="@string/amount"
+                android:paddingTop="5dp"
+                android:paddingLeft="20dp"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:text="@string/delete"
+                android:paddingTop="5dp"
+                android:paddingLeft="20dp"
+                android:textStyle="bold"
+                />
+
+        </TableRow>
+
+    </TableLayout>
 
     <Button
         android:id="@+id/backButton"

@@ -11,7 +11,7 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper implements ProductLogic {
     private static final String DATABASE_NAME = "products.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String TABLE_NAME = "products";
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_NAME = "name";
@@ -28,7 +28,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements ProductLogic {
                 COLUMN_NAME + " TEXT, " +
                 COLUMN_CATEGORY + " TEXT, " +
                 COLUMN_PRICE + " REAL," +
-                COLUMN_AMOUNT + "INTEGER)";
+                COLUMN_AMOUNT + " INTEGER)";
         db.execSQL(createTable);
     }
     @Override
@@ -39,22 +39,23 @@ public class DatabaseHelper extends SQLiteOpenHelper implements ProductLogic {
     }
 
     @Override
-    public void addProduct(Product p) {
+    public long addProduct(Product p) {
         SQLiteDatabase db=this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_NAME,p.getName());
         values.put(COLUMN_CATEGORY,p.getCategory());
         values.put(COLUMN_AMOUNT,p.getAmount());
         values.put(COLUMN_PRICE,p.getPrice());
-        db.insert(TABLE_NAME,null,values);
+        long result=db.insert(TABLE_NAME,null,values);
         db.close();
+        return result;
     }
 
     @Override
     public List<Product> getAllProducts() {
         int id,amount;
         String name,category;
-        float price;
+        Double price;
         List<Product> products = new ArrayList<>();
         SQLiteDatabase db=this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM "+TABLE_NAME,null);
@@ -64,7 +65,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements ProductLogic {
                 id=cursor.getInt(0);
                 name=cursor.getString(1);
                 category=cursor.getString(2);
-                price=cursor.getFloat(3);
+                price=cursor.getDouble(3);
                 amount=cursor.getInt(4);
                 products.add(new Product(id,name,category,price,amount));
             }while (cursor.moveToNext());

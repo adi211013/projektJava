@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">finanse</string>
+    <string name="name">Nazwa</string>
+    <string name="delete">Usuń</string>
+    <string name="category">Kategoria</string>
+    <string name="price">Cena</string>
+    <string name="amount">Ilość</string>
     <string name="add">Dodaj zakup</string>
     <string name="chart">Zobacz wykres</string>
     <string name="history">Zobacz historie zakupów</string>
