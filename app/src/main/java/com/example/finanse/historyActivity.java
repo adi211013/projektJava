@@ -30,12 +30,7 @@ public class historyActivity extends AppCompatActivity {
             return insets;
         });
         backButton=findViewById(R.id.backButton);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        backButton.setOnClickListener(v -> finish());
         tableLayout=findViewById(R.id.table);
         DatabaseHelper db=new DatabaseHelper(this);
         List<Product> productList =db.getAllProducts();
@@ -66,13 +61,10 @@ public class historyActivity extends AppCompatActivity {
             Button deleteButton=new Button(this);
             deleteButton.setText("Usuń produkt");
             deleteButton.setPadding(20,5,0,0);
-            deleteButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    db.deleteProduct(p.getId());
-                    Toast.makeText(historyActivity.this,"Produkt usunięty",Toast.LENGTH_SHORT).show();
-                    tableLayout.removeView(row);
-                }
+            deleteButton.setOnClickListener(v -> {
+                db.deleteProduct(p.getId());
+                Toast.makeText(historyActivity.this,"Produkt usunięty",Toast.LENGTH_SHORT).show();
+                tableLayout.removeView(row);
             });
             row.addView(deleteButton);
             tableLayout.addView(row);

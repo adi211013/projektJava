@@ -12,7 +12,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
-
+    Button addButton,historyButton,chartButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,21 +23,20 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        Button addButton=(Button)findViewById(R.id.addButton);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent =new Intent(MainActivity.this,addActivity.class);
-                startActivity(intent);
-            }
+        addButton=findViewById(R.id.addButton);
+        addButton.setOnClickListener(v -> {
+            Intent intent =new Intent(MainActivity.this,addActivity.class);
+            startActivity(intent);
         });
-        Button historyButton=(Button)findViewById(R.id.historyButton);
-        historyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent =new Intent(MainActivity.this,historyActivity.class);
-                startActivity(intent);
-            }
+        historyButton=findViewById(R.id.historyButton);
+        historyButton.setOnClickListener(v -> {
+            Intent intent =new Intent(MainActivity.this,historyActivity.class);
+            startActivity(intent);
+        });
+        chartButton = findViewById(R.id.chartButton);
+        chartButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this,chartActivity.class);
+            startActivity(intent);
         });
     }
 }
