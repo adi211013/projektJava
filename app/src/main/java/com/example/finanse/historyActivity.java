@@ -1,7 +1,6 @@
 package com.example.finanse;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -19,6 +18,8 @@ import java.util.List;
 public class historyActivity extends AppCompatActivity {
     Button backButton;
     TableLayout tableLayout;
+    private User u;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,47 +30,48 @@ public class historyActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        User u = (User) getIntent().getSerializableExtra("User");
-        backButton=findViewById(R.id.backButton);
+        u = (User) getIntent().getSerializableExtra("User");
+        backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> finish());
-        tableLayout=findViewById(R.id.table);
-        DatabaseHelper db=new DatabaseHelper(this);
-        List<Product> productList =db.getProductsForUser(u.getId());
-        for(Product p : productList)
-        {
-            TableRow row=new TableRow(this);
+        tableLayout = findViewById(R.id.table);
+        generateTable();
+    }
+
+    public void generateTable() {
+        ProductService ps = new ProductService(this);
+        List<Product> productList = ps.getProductsForUser(u.getId());
+        for (Product p : productList) {
+            TableRow row = new TableRow(this);
             //nazwa
-            TextView nameText=new TextView(this);
+            TextView nameText = new TextView(this);
             nameText.setText(p.getName());
-            nameText.setPadding(20,5,0,0);
+            nameText.setPadding(30, 7, 0, 0);
             row.addView(nameText);
             //nazwa
-            TextView categoryText=new TextView(this);
+            TextView categoryText = new TextView(this);
             categoryText.setText(p.getCategory());
-            categoryText.setPadding(20,5,0,0);
+            categoryText.setPadding(30, 7, 0, 0);
             row.addView(categoryText);
             //nazwa
-            TextView priceText=new TextView(this);
-            priceText.setText(p.getPrice()+" zł");
-            priceText.setPadding(20,5,0,0);
+            TextView priceText = new TextView(this);
+            priceText.setText(p.getPrice() + " zł");
+            priceText.setPadding(30, 7, 0, 0);
             row.addView(priceText);
             //nazwa
-            TextView amountText =new TextView(this);
-            amountText.setText(p.getAmount()+" szt");
-            amountText.setPadding(20,5,0,0);
+            TextView amountText = new TextView(this);
+            amountText.setText(p.getAmount() + " szt");
+            amountText.setPadding(30, 7, 0, 0);
             row.addView(amountText);
             //usuwanie
-            Button deleteButton=new Button(this);
-            deleteButton.setText("Usuń produkt");
-            deleteButton.setPadding(20,5,0,0);
+            Button deleteButton = new Button(this);
+            deleteButton.setText("Usuń");
             deleteButton.setOnClickListener(v -> {
-                db.deleteProduct(p.getId());
-                Toast.makeText(historyActivity.this,"Produkt usunięty",Toast.LENGTH_SHORT).show();
+                ps.deleteProduct(p.getId());
+                Toast.makeText(historyActivity.this, "Produkt usunięty", Toast.LENGTH_SHORT).show();
                 tableLayout.removeView(row);
             });
             row.addView(deleteButton);
             tableLayout.addView(row);
-
         }
     }
 }

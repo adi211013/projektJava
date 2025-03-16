@@ -1,43 +1,34 @@
 package com.example.finanse;
 
 public class Product implements ProductInterface{
-    private int User_id;
-    private int Id;
-    private String Name,Category;
-    private double Price;
-    private int Amount;
-    public Product(String name, String category, double price, int amount)
-    {
-        Name=name;
-        Category=category;
-        Price=price;
-        Amount=amount;
-    }
+    private int user_id;
+    private int id;
+    private String name, category;
+    private double price;
+    private int amount;
     public Product(int id,int user_id,String name, String category, double price, int amount)
     {
-        Id=id;
-        Name=name;
-        Category=category;
-        Price=price;
-        Amount=amount;
-        User_id=user_id;
+        this.id =id;
+        this.name =name;
+        this.category =category;
+        this.price =price;
+        this.amount =amount;
+        this.user_id =user_id;
     }
     public Product(int user_id,String name, String category, double price, int amount)
     {
-        Name=name;
-        Category=category;
-        Price=price;
-        Amount=amount;
-        User_id=user_id;
+        this.name =name;
+        this.category =category;
+        this.price =price;
+        this.amount =amount;
+        this.user_id =user_id;
     }
-    public String getName() {return Name;}
-    public String getCategory() {return Category;}
-    public double getPrice() {return Price;}
-    public int getAmount() {return Amount;}
-    public int getId(){return Id;}
-
-    @Override
+    public String getName() {return name;}
+    public String getCategory() {return category;}
+    public double getPrice() {return price;}
+    public int getAmount() {return amount;}
+    public int getId(){return id;}
     public int getUserID() {
-        return User_id;
+        return user_id;
     }
 }

@@ -3,12 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginTop="30dp"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".addActivity">
     <TextView
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:text="@string/nameHint"/>
@@ -16,7 +17,8 @@
         android:id="@+id/nameEditext"
         android:inputType="text"
         android:hint="@string/nameHint"
-        android:layout_width="200dp"
+        android:layout_width="match_parent"
+        android:maxLength="15"
         android:layout_height="40dp"/>
     <TextView
         android:layout_width="match_parent"
@@ -26,7 +28,7 @@
         android:id="@+id/priceEditext"
         android:inputType="numberDecimal"
         android:hint="@string/priceHint"
-        android:layout_width="200dp"
+        android:layout_width="match_parent"
         android:layout_height="40dp"/>
     <TextView
         android:layout_width="match_parent"
@@ -36,7 +38,7 @@
         android:id="@+id/amountEditext"
         android:inputType="number"
         android:hint="@string/amountHint"
-        android:layout_width="200dp"
+        android:layout_width="match_parent"
         android:layout_height="40dp"/>
     <TextView
         android:layout_width="match_parent"
@@ -45,7 +47,7 @@
     <Spinner
         android:id="@+id/categoriesSpinner"
         android:entries="@array/categoriesEntries"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />
 

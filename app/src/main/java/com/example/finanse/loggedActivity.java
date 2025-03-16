@@ -37,9 +37,7 @@ public class loggedActivity extends AppCompatActivity {
             startActivity(intent);
         });
         logoutButton=findViewById(R.id.logoutButton);
-        logoutButton.setOnClickListener(v ->{
-            finish();
-        });
+        logoutButton.setOnClickListener(v -> finish());
 
     }
 }

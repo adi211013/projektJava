@@ -12,7 +12,8 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper implements ProductLogic , UserLogic{
     private static final String DATABASE_NAME = "products.db";
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
+    //produkty
     private static final String PRODUCT_TABLE_NAME = "products";
     private static final String PRODUCT_COLUMN_ID = "id";
     private static final String PRODUCT_COLUMN_USERID = "userid";
@@ -20,6 +21,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements ProductLogic , U
     private static final String PRODUCT_COLUMN_CATEGORY = "category";
     private static final String PRODUCT_COLUMN_PRICE = "price";
     private static final String PRODUCT_COLUMN_AMOUNT = "amount";
+    //uzytkownicy
     private static final String USER_TABLE_NAME = "users";
     private static final String USER_COLUMN_ID = "id";
     private static final String USER_COLUMN_EMAIL = "email";
@@ -62,34 +64,9 @@ public class DatabaseHelper extends SQLiteOpenHelper implements ProductLogic , U
         values.put(PRODUCT_COLUMN_AMOUNT,p.getAmount());
         values.put(PRODUCT_COLUMN_PRICE,p.getPrice());
         long result=db.insert(PRODUCT_TABLE_NAME,null,values);
-        db.close();
+        //db.close();
         return result;
     }
-
-    /*@Override
-    public List<Product> getAllProducts() {
-        int id,amount,user_id;
-        String name,category;
-        Double price;
-        List<Product> products = new ArrayList<>();
-        SQLiteDatabase db=this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM "+PRODUCT_TABLE_NAME + "WHERE "+,null);
-        if(cursor.moveToFirst())
-        {
-            do{
-                id=cursor.getInt(0);
-                name=cursor.getString(1);
-                category=cursor.getString(2);
-                price=cursor.getDouble(3);
-                amount=cursor.getInt(4);
-                user_id=0;
-                products.add(new Product(id,user_id,name,category,price,amount));
-            }while (cursor.moveToNext());
-        }
-        cursor.close();
-        db.close();
-        return products;
-    }*/
     public List<Product> getProductsForUser(int userId) {
         List<Product> products = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -107,7 +84,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements ProductLogic , U
             } while (cursor.moveToNext());
         }
         cursor.close();
-        db.close();
+        //db.close();
         return products;
     }
     @Override
@@ -124,7 +101,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements ProductLogic , U
         values.put(USER_COLUMN_EMAIL, u.getEmail());
         values.put(USER_COLUMN_PASSWORD, u.getPassword());
         long result = db.insert(USER_TABLE_NAME, null, values);
-        db.close();
+        //db.close();
         return result;
     }
 
@@ -141,22 +118,17 @@ public class DatabaseHelper extends SQLiteOpenHelper implements ProductLogic , U
             user = new User(id, dbPassword, dbEmail);
         }
         cursor.close();
-        db.close();
+        //db.close();
         return user;
     }
     public int getUser(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
-
         String selection = USER_COLUMN_EMAIL + "=?";
         String[] selectionArgs = { email };
-
         Cursor cursor = db.query(USER_TABLE_NAME, null, selection, selectionArgs, null, null, null);
-
         int result = (cursor.moveToFirst()) ? 1 : -1;
-
         cursor.close();
-        db.close();
-
+        //db.close();
         return result;
     }
 }

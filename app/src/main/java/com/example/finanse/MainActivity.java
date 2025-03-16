@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 public class MainActivity extends AppCompatActivity {
     Button loginButton,signinButton;
     EditText emailEditText,passwordEditText;
+    UserService userService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,56 +27,56 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        emailEditText=findViewById(R.id.emailET);
+        passwordEditText=findViewById(R.id.passwordET);
+        userService = new UserService(this);
         loginButton=findViewById(R.id.loginButton);
-        loginButton.setOnClickListener(v -> {
-            emailEditText=findViewById(R.id.emailET);
-            passwordEditText=findViewById(R.id.passwordET);
-            try {
-                String email=emailEditText.getText().toString();
-                String password=passwordEditText.getText().toString();
-                if (email.isEmpty() || password.isEmpty())
-                {
-                    Toast.makeText(MainActivity.this, "Pola nie moga byc puste", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                DatabaseHelper db = new DatabaseHelper(this);
-                User u=db.getUser(email,password);
-                if(u!=null){
-                    Intent intent =new Intent(MainActivity.this,loggedActivity.class);
-                    intent.putExtra("User",u);
-                    startActivity(intent);
-                }
-                else {
-                    Toast.makeText(MainActivity.this, "Taki uzytkownik nie istnieje", Toast.LENGTH_SHORT).show();
-                    return;
-               }
-            } catch (Exception e) {
-                Toast.makeText(MainActivity.this, "Wystapił błąd: "+e, Toast.LENGTH_SHORT).show();
-           }
-        });
+        loginButton.setOnClickListener(v -> loginUser());
         signinButton=findViewById(R.id.signinButton);
-        signinButton.setOnClickListener(v ->{
-            emailEditText=findViewById(R.id.emailET);
-            passwordEditText=findViewById(R.id.passwordET);
-            try {
-                String email = emailEditText.getText().toString();
-                String password = passwordEditText.getText().toString();
-                if (email.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "Pola nie moga byc puste", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                DatabaseHelper db=new DatabaseHelper(this);
-                if(db.getUser(email)==1){
-                    Toast.makeText(MainActivity.this, "Uzytkownik o podanym adresie email istnieje w bazie danych", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                User u=new User(password,email);
-                if (db.addUser(u) != -1) {
-                    Toast.makeText(MainActivity.this, "Rejestracja przebiegla pomyslnie", Toast.LENGTH_SHORT).show();
-                }
-            }catch (Exception e) {
+        signinButton.setOnClickListener(v ->registerUser());
+    }
+    private void loginUser()
+    {
+            String email=emailEditText.getText().toString();
+            String password=passwordEditText.getText().toString();
+            if (email.isEmpty() || password.isEmpty())
+            {
+                Toast.makeText(MainActivity.this, "Pola nie moga byc puste", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            try{
+                User u=userService.loginUser(email,password);
+                Intent intent =new Intent(MainActivity.this,loggedActivity.class);
+                intent.putExtra("User",u);
+                startActivity(intent);
+            }
+            catch (UserNotFoundException e)
+            {
+                Toast.makeText(MainActivity.this, "Taki uzytkownik nie istnieje", Toast.LENGTH_SHORT).show();
+            }
+            catch (Exception e) {
                 Toast.makeText(MainActivity.this, "Wystapił błąd: "+e, Toast.LENGTH_SHORT).show();
             }
-        });
     }
+    private void registerUser()
+    {
+        String email = emailEditText.getText().toString();
+        String password = passwordEditText.getText().toString();
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(MainActivity.this, "Pola nie moga byc puste", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        try {
+            userService.registerUser(email,password);
+            Toast.makeText(MainActivity.this, "Rejestracja przebiegla pomyslnie", Toast.LENGTH_SHORT).show();
+        }
+        catch (UserAlreadyExistsException e)
+        {
+            Toast.makeText(MainActivity.this, "Uzytkownik o podanym adresie email istnieje w bazie danych", Toast.LENGTH_SHORT).show();
+        }
+        catch (Exception e) {
+            Toast.makeText(MainActivity.this, "Wystapił błąd: "+e, Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }
