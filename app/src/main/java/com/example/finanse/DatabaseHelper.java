@@ -64,7 +64,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements ProductLogic , U
         values.put(PRODUCT_COLUMN_AMOUNT,p.getAmount());
         values.put(PRODUCT_COLUMN_PRICE,p.getPrice());
         long result=db.insert(PRODUCT_TABLE_NAME,null,values);
-        //db.close();
+        db.close();
         return result;
     }
     public List<Product> getProductsForUser(int userId) {
@@ -84,7 +84,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements ProductLogic , U
             } while (cursor.moveToNext());
         }
         cursor.close();
-        //db.close();
+        db.close();
         return products;
     }
     @Override
@@ -101,7 +101,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements ProductLogic , U
         values.put(USER_COLUMN_EMAIL, u.getEmail());
         values.put(USER_COLUMN_PASSWORD, u.getPassword());
         long result = db.insert(USER_TABLE_NAME, null, values);
-        //db.close();
+        db.close();
         return result;
     }
 
@@ -118,7 +118,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements ProductLogic , U
             user = new User(id, dbPassword, dbEmail);
         }
         cursor.close();
-        //db.close();
+        db.close();
         return user;
     }
     public int getUser(String email) {
@@ -128,7 +128,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements ProductLogic , U
         Cursor cursor = db.query(USER_TABLE_NAME, null, selection, selectionArgs, null, null, null);
         int result = (cursor.moveToFirst()) ? 1 : -1;
         cursor.close();
-        //db.close();
+        db.close();
         return result;
     }
 }

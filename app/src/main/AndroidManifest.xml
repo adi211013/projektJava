@@ -16,9 +16,6 @@
             android:name=".loggedActivity"
             android:exported="false" />
         <activity
-            android:name=".chartActivity"
-            android:exported="false" />
-        <activity
             android:name=".historyActivity"
             android:exported="false" />
         <activity
