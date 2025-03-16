@@ -7,34 +7,48 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class DatabaseHelper extends SQLiteOpenHelper implements ProductLogic {
+public class DatabaseHelper extends SQLiteOpenHelper implements ProductLogic , UserLogic{
     private static final String DATABASE_NAME = "products.db";
-    private static final int DATABASE_VERSION = 2;
-    private static final String TABLE_NAME = "products";
-    private static final String COLUMN_ID = "id";
-    private static final String COLUMN_NAME = "name";
-    private static final String COLUMN_CATEGORY = "category";
-    private static final String COLUMN_PRICE = "price";
-    private static final String COLUMN_AMOUNT = "amount";
+    private static final int DATABASE_VERSION = 6;
+    private static final String PRODUCT_TABLE_NAME = "products";
+    private static final String PRODUCT_COLUMN_ID = "id";
+    private static final String PRODUCT_COLUMN_USERID = "userid";
+    private static final String PRODUCT_COLUMN_NAME = "name";
+    private static final String PRODUCT_COLUMN_CATEGORY = "category";
+    private static final String PRODUCT_COLUMN_PRICE = "price";
+    private static final String PRODUCT_COLUMN_AMOUNT = "amount";
+    private static final String USER_TABLE_NAME = "users";
+    private static final String USER_COLUMN_ID = "id";
+    private static final String USER_COLUMN_EMAIL = "email";
+
+    private static final String USER_COLUMN_PASSWORD = "password";
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTable = "CREATE TABLE " + TABLE_NAME + " (" +
-                COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_NAME + " TEXT, " +
-                COLUMN_CATEGORY + " TEXT, " +
-                COLUMN_PRICE + " REAL," +
-                COLUMN_AMOUNT + " INTEGER)";
+        String createTable = "CREATE TABLE " + PRODUCT_TABLE_NAME + " (" +
+                PRODUCT_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                PRODUCT_COLUMN_USERID + " INTEGER , " +
+                PRODUCT_COLUMN_NAME + " TEXT, " +
+                PRODUCT_COLUMN_CATEGORY + " TEXT, " +
+                PRODUCT_COLUMN_PRICE + " REAL," +
+                PRODUCT_COLUMN_AMOUNT + " INTEGER)";
         db.execSQL(createTable);
+        String createUserTable = "CREATE TABLE " + USER_TABLE_NAME + " (" +
+                USER_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                USER_COLUMN_EMAIL + " TEXT, " +
+                USER_COLUMN_PASSWORD + " TEXT)";
+        db.execSQL(createUserTable);
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
-        db.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS "+PRODUCT_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE_NAME);
         onCreate(db);
     }
 
@@ -42,23 +56,24 @@ public class DatabaseHelper extends SQLiteOpenHelper implements ProductLogic {
     public long addProduct(Product p) {
         SQLiteDatabase db=this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(COLUMN_NAME,p.getName());
-        values.put(COLUMN_CATEGORY,p.getCategory());
-        values.put(COLUMN_AMOUNT,p.getAmount());
-        values.put(COLUMN_PRICE,p.getPrice());
-        long result=db.insert(TABLE_NAME,null,values);
+        values.put(PRODUCT_COLUMN_NAME,p.getName());
+        values.put(PRODUCT_COLUMN_USERID,p.getUserID());
+        values.put(PRODUCT_COLUMN_CATEGORY,p.getCategory());
+        values.put(PRODUCT_COLUMN_AMOUNT,p.getAmount());
+        values.put(PRODUCT_COLUMN_PRICE,p.getPrice());
+        long result=db.insert(PRODUCT_TABLE_NAME,null,values);
         db.close();
         return result;
     }
 
-    @Override
+    /*@Override
     public List<Product> getAllProducts() {
-        int id,amount;
+        int id,amount,user_id;
         String name,category;
         Double price;
         List<Product> products = new ArrayList<>();
         SQLiteDatabase db=this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM "+TABLE_NAME,null);
+        Cursor cursor = db.rawQuery("SELECT * FROM "+PRODUCT_TABLE_NAME + "WHERE "+,null);
         if(cursor.moveToFirst())
         {
             do{
@@ -67,18 +82,81 @@ public class DatabaseHelper extends SQLiteOpenHelper implements ProductLogic {
                 category=cursor.getString(2);
                 price=cursor.getDouble(3);
                 amount=cursor.getInt(4);
-                products.add(new Product(id,name,category,price,amount));
+                user_id=0;
+                products.add(new Product(id,user_id,name,category,price,amount));
             }while (cursor.moveToNext());
         }
         cursor.close();
         db.close();
         return products;
+    }*/
+    public List<Product> getProductsForUser(int userId) {
+        List<Product> products = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selection = PRODUCT_COLUMN_USERID + "=?";
+        String[] selectionArgs = {String.valueOf(userId)};
+        Cursor cursor = db.query(PRODUCT_TABLE_NAME, null, selection, selectionArgs, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(PRODUCT_COLUMN_ID));
+                String name = cursor.getString(cursor.getColumnIndexOrThrow(PRODUCT_COLUMN_NAME));
+                String category = cursor.getString(cursor.getColumnIndexOrThrow(PRODUCT_COLUMN_CATEGORY));
+                double price = cursor.getDouble(cursor.getColumnIndexOrThrow(PRODUCT_COLUMN_PRICE));
+                int amount = cursor.getInt(cursor.getColumnIndexOrThrow(PRODUCT_COLUMN_AMOUNT));
+                products.add(new Product(id, userId, name, category, price, amount));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return products;
     }
-
     @Override
     public void deleteProduct(int id) {
         SQLiteDatabase db=this.getWritableDatabase();
-        db.delete(TABLE_NAME,COLUMN_ID+"=?",new String[]{String.valueOf(id)});
+        db.delete(PRODUCT_TABLE_NAME,PRODUCT_COLUMN_ID+"=?",new String[]{String.valueOf(id)});
         db.close();
+    }
+
+    @Override
+    public long addUser(User u) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(USER_COLUMN_EMAIL, u.getEmail());
+        values.put(USER_COLUMN_PASSWORD, u.getPassword());
+        long result = db.insert(USER_TABLE_NAME, null, values);
+        db.close();
+        return result;
+    }
+
+    public User getUser(String email,String password ) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selection = USER_COLUMN_EMAIL + "=? AND " + USER_COLUMN_PASSWORD + "=?";
+        String[] selectionArgs = { email, password };
+        Cursor cursor = db.query(USER_TABLE_NAME, null, selection, selectionArgs, null, null, null);
+        User user = null;
+        if(cursor.moveToFirst()){
+            int id = cursor.getInt(cursor.getColumnIndexOrThrow(USER_COLUMN_ID));
+            String dbEmail = cursor.getString(cursor.getColumnIndexOrThrow(USER_COLUMN_EMAIL));
+            String dbPassword = cursor.getString(cursor.getColumnIndexOrThrow(USER_COLUMN_PASSWORD));
+            user = new User(id, dbPassword, dbEmail);
+        }
+        cursor.close();
+        db.close();
+        return user;
+    }
+    public int getUser(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selection = USER_COLUMN_EMAIL + "=?";
+        String[] selectionArgs = { email };
+
+        Cursor cursor = db.query(USER_TABLE_NAME, null, selection, selectionArgs, null, null, null);
+
+        int result = (cursor.moveToFirst()) ? 1 : -1;
+
+        cursor.close();
+        db.close();
+
+        return result;
     }
 }

@@ -28,6 +28,7 @@ public class addActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        User u = (User) getIntent().getSerializableExtra("User");
         backButton= findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> finish());
         db=new DatabaseHelper(this);
@@ -54,7 +55,7 @@ public class addActivity extends AppCompatActivity {
                     return;
                 }
                 String category = categorySpinner.getSelectedItem().toString();
-                Product p = new Product(name, category, price, amount);
+                Product p = new Product(u.getId(),name, category, price, amount);
                 if (db.addProduct(p) != -1) {
                     Toast.makeText(addActivity.this, "Produkt dodany", Toast.LENGTH_SHORT).show();
                     finish();

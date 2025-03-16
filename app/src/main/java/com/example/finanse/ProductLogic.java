@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface ProductLogic  {
     long addProduct(Product p);
-    List<Product> getAllProducts();
+    List<Product> getProductsForUser(int userId);
     void deleteProduct(int id);
 }

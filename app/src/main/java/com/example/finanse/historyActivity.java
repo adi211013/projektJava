@@ -29,11 +29,12 @@ public class historyActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        User u = (User) getIntent().getSerializableExtra("User");
         backButton=findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> finish());
         tableLayout=findViewById(R.id.table);
         DatabaseHelper db=new DatabaseHelper(this);
-        List<Product> productList =db.getAllProducts();
+        List<Product> productList =db.getProductsForUser(u.getId());
         for(Product p : productList)
         {
             TableRow row=new TableRow(this);
