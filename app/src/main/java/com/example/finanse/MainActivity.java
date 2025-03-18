@@ -14,9 +14,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
-    Button loginButton,signinButton;
-    EditText emailEditText,passwordEditText;
+    Button loginButton, signinButton;
+    EditText emailEditText, passwordEditText;
     UserService userService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,55 +28,64 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        emailEditText=findViewById(R.id.emailET);
-        passwordEditText=findViewById(R.id.passwordET);
+        emailEditText = findViewById(R.id.emailET);
+        passwordEditText = findViewById(R.id.passwordET);
         userService = new UserService(this);
-        loginButton=findViewById(R.id.loginButton);
+        loginButton = findViewById(R.id.loginButton);
         loginButton.setOnClickListener(v -> loginUser());
-        signinButton=findViewById(R.id.signinButton);
-        signinButton.setOnClickListener(v ->registerUser());
+        signinButton = findViewById(R.id.signinButton);
+        signinButton.setOnClickListener(v -> registerUser());
     }
-    private void loginUser()
-    {
-            String email=emailEditText.getText().toString();
-            String password=passwordEditText.getText().toString();
-            if (email.isEmpty() || password.isEmpty())
-            {
-                Toast.makeText(MainActivity.this, "Pola nie moga byc puste", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            try{
-                User u=userService.loginUser(email,password);
-                Intent intent =new Intent(MainActivity.this,loggedActivity.class);
-                intent.putExtra("User",u);
-                startActivity(intent);
-            }
-            catch (UserNotFoundException e)
-            {
-                Toast.makeText(MainActivity.this, "Taki uzytkownik nie istnieje", Toast.LENGTH_SHORT).show();
-            }
-            catch (Exception e) {
-                Toast.makeText(MainActivity.this, "Wystapił błąd: "+e, Toast.LENGTH_SHORT).show();
-            }
-    }
-    private void registerUser()
-    {
+
+    private void loginUser() {
         String email = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
-        if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(MainActivity.this, "Pola nie moga byc puste", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        if(validatePass(password)) return;
+        if(validateEmail(email)) return;
         try {
-            userService.registerUser(email,password);
+            User u = userService.loginUser(email, password);
+            Intent intent = new Intent(MainActivity.this, loggedActivity.class);
+            intent.putExtra("User", u);
+            startActivity(intent);
+        } catch (UserNotFoundException e) {
+            Toast.makeText(MainActivity.this, "Taki uzytkownik nie istnieje", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(MainActivity.this, "Wystapił błąd: " + e, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void registerUser() {
+        String email = emailEditText.getText().toString();
+        String password = passwordEditText.getText().toString();
+        if(validatePass(password)) return;
+        if(validateEmail(email)) return;
+        try {
+            userService.registerUser(email, password);
             Toast.makeText(MainActivity.this, "Rejestracja przebiegla pomyslnie", Toast.LENGTH_SHORT).show();
-        }
-        catch (UserAlreadyExistsException e)
-        {
+        } catch (UserAlreadyExistsException e) {
             Toast.makeText(MainActivity.this, "Uzytkownik o podanym adresie email istnieje w bazie danych", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(MainActivity.this, "Wystapił błąd: " + e, Toast.LENGTH_SHORT).show();
         }
-        catch (Exception e) {
-            Toast.makeText(MainActivity.this, "Wystapił błąd: "+e, Toast.LENGTH_SHORT).show();
+    }
+    boolean validatePass(String password)
+    {
+        if (password.isEmpty())
+        {
+            Toast.makeText(MainActivity.this, "Haslo nie moze byc puste", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        else return false;
+    }
+    boolean validateEmail(String email)
+    {
+        boolean val= email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+        boolean empty=email.isEmpty();
+        if(val && !empty)
+            return false;
+        else {
+            Toast.makeText(MainActivity.this, "Niepoprawny adres email", Toast.LENGTH_SHORT).show();
+            return true;
         }
     }
 
