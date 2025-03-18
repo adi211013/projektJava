@@ -13,6 +13,9 @@ public class ProductService {
     public long addProduct(Product p) {
         return db.addProduct(p);
     }
+    public long addProduct(DiscountedProduct p) {
+        return db.addProduct(p);
+    }
     public List<Product> getProductsForUser(int userId)
     {
         return db.getProductsForUser(userId);

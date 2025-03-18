@@ -20,6 +20,7 @@
     <string name="nameHint">Podaj nazwe produktu</string>
     <string name="priceHint">Podaj cene</string>
     <string name="amountHint">Podaj ilość</string>
+    <string name="discountHint">Podaj promocje (w %,opcjonalne)</string>
     <string name="categoryHint">Podaj kategorie</string>
     <string name="emailHint">Podaj adres email</string>
     <string name="passwordHint">Podaj haslo</string>

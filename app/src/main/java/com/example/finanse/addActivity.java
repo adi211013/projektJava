@@ -15,7 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class addActivity extends AppCompatActivity {
     DatabaseHelper db;
-    EditText nameEdittext,priceEdittext,amountEdittext;
+    EditText nameEdittext,priceEdittext,amountEdittext,discountedEdittext;
     Spinner categorySpinner;
     private User u;
     Button addProductButton,backButton;
@@ -37,14 +37,17 @@ public class addActivity extends AppCompatActivity {
         amountEdittext=findViewById(R.id.amountEditext);
         categorySpinner= findViewById(R.id.categoriesSpinner);
         addProductButton=findViewById(R.id.addProductButton);
+        discountedEdittext=findViewById(R.id.discountEdittext);
         addProductButton.setOnClickListener(v -> addProduct());
     }
     public void addProduct()
     {
         ProductService ps=new ProductService(this);
         String name=nameEdittext.getText().toString();
-        if (name.isEmpty()) {
-            Toast.makeText(addActivity.this, "Nazwa produktu nie może być pusta", Toast.LENGTH_SHORT).show();
+        String priceStr=priceEdittext.getText().toString();
+        String amountStr=amountEdittext.getText().toString();
+        if (name.isEmpty()|| priceStr.isEmpty() || amountStr.isEmpty()) {
+            Toast.makeText(addActivity.this, "Pola nie moga byc puste", Toast.LENGTH_SHORT).show();
             return;
         }
         double price = Double.parseDouble(priceEdittext.getText().toString());
@@ -58,12 +61,33 @@ public class addActivity extends AppCompatActivity {
             return;
         }
         String category = categorySpinner.getSelectedItem().toString();
-        Product p = new Product(u.getId(),name, category, price, amount);
-        if (ps.addProduct(p) != -1) {
-            Toast.makeText(addActivity.this, "Produkt dodany", Toast.LENGTH_SHORT).show();
-            finish();
+        String discountStr=discountedEdittext.getText().toString();
+
+        if(!discountStr.isEmpty())
+        {
+            double discount=Double.parseDouble(discountStr);
+            if(discount>100 || discount<0)
+            {
+                Toast.makeText(addActivity.this, "Wprowadzono niewlasciwa promocje", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            DiscountedProduct p =new DiscountedProduct(u.getId(), name, category, price, amount,discount);
+            p.modifyPrice();
+            if (ps.addProduct(p) != -1) {
+                Toast.makeText(addActivity.this, "Produkt dodany", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+            else
+                Toast.makeText(addActivity.this, "Wystąpił błą∂, spróbuj jeszcze raz.", Toast.LENGTH_SHORT).show();
         }
-        else
-            Toast.makeText(addActivity.this, "Wystąpił błą∂, spróbuj jeszcze raz.", Toast.LENGTH_SHORT).show();
+        else{
+            Product p = new Product(u.getId(), name, category, price, amount);
+            if (ps.addProduct(p) != -1) {
+                Toast.makeText(addActivity.this, "Produkt dodany", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+            else
+                Toast.makeText(addActivity.this, "Wystąpił błą∂, spróbuj jeszcze raz.", Toast.LENGTH_SHORT).show();
+        }
     }
 }

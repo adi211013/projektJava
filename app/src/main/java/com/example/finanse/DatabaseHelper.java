@@ -12,7 +12,7 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper implements ProductLogic , UserLogic{
     private static final String DATABASE_NAME = "products.db";
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
     //produkty
     private static final String PRODUCT_TABLE_NAME = "products";
     private static final String PRODUCT_COLUMN_ID = "id";
@@ -21,6 +21,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements ProductLogic , U
     private static final String PRODUCT_COLUMN_CATEGORY = "category";
     private static final String PRODUCT_COLUMN_PRICE = "price";
     private static final String PRODUCT_COLUMN_AMOUNT = "amount";
+    private static final String PRODUCT_COLUMN_DISCOUNT = "discount";
     //uzytkownicy
     private static final String USER_TABLE_NAME = "users";
     private static final String USER_COLUMN_ID = "id";
@@ -38,6 +39,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements ProductLogic , U
                 PRODUCT_COLUMN_NAME + " TEXT, " +
                 PRODUCT_COLUMN_CATEGORY + " TEXT, " +
                 PRODUCT_COLUMN_PRICE + " REAL," +
+                PRODUCT_COLUMN_DISCOUNT + " REAL," +
                 PRODUCT_COLUMN_AMOUNT + " INTEGER)";
         db.execSQL(createTable);
         String createUserTable = "CREATE TABLE " + USER_TABLE_NAME + " (" +
@@ -63,6 +65,21 @@ public class DatabaseHelper extends SQLiteOpenHelper implements ProductLogic , U
         values.put(PRODUCT_COLUMN_CATEGORY,p.getCategory());
         values.put(PRODUCT_COLUMN_AMOUNT,p.getAmount());
         values.put(PRODUCT_COLUMN_PRICE,p.getPrice());
+        values.put(PRODUCT_COLUMN_DISCOUNT,0);
+        long result=db.insert(PRODUCT_TABLE_NAME,null,values);
+        db.close();
+        return result;
+    }
+    public long addProduct(DiscountedProduct p)
+    {
+        SQLiteDatabase db=this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(PRODUCT_COLUMN_NAME,p.getName());
+        values.put(PRODUCT_COLUMN_USERID,p.getUserID());
+        values.put(PRODUCT_COLUMN_CATEGORY,p.getCategory());
+        values.put(PRODUCT_COLUMN_AMOUNT,p.getAmount());
+        values.put(PRODUCT_COLUMN_PRICE,p.getPrice());
+        values.put(PRODUCT_COLUMN_DISCOUNT,p.getDiscontedProcentage());
         long result=db.insert(PRODUCT_TABLE_NAME,null,values);
         db.close();
         return result;

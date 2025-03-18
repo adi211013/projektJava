@@ -4,7 +4,7 @@ public class Product implements ProductInterface{
     private int user_id;
     private int id;
     private String name, category;
-    private double price;
+    protected double price;
     private int amount;
     public Product(int id,int user_id,String name, String category, double price, int amount)
     {
